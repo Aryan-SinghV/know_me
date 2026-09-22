@@ -1,0 +1,304 @@
+/* ═══════════════════════════════════════════════
+   OS 九 — PIXEL ART & COMPONENT SYSTEM
+   ═══════════════════════════════════════════════ */
+
+/* ─── Blink utility ─── */
+.blink {
+    animation: px-blink 1.2s step-end infinite;
+}
+@keyframes px-blink { 50% { opacity: 0; } }
+
+/* ─── LED Indicators ─── */
+.led {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+}
+.led--green { background: #28c840; box-shadow: 0 0 6px #28c840; }
+.led--amber { background: #febc2e; box-shadow: 0 0 6px #febc2e; }
+.led--red   { background: #ff5f57; box-shadow: 0 0 6px #ff5f57; }
+
+/* ─── Pixel Frames ─── */
+.px-frame {
+    background: var(--charcoal);
+    border: 1px solid var(--border);
+    position: relative;
+}
+/* Pixel corner decorations */
+.px-frame::before, .px-frame::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--orange);
+}
+.px-frame::before { top: -1px; right: -1px; }
+.px-frame::after  { bottom: -1px; left: -1px; }
+
+.px-frame-heavy {
+    border: 2px solid var(--border-bright);
+    background: var(--charcoal);
+    position: relative;
+}
+.px-frame-heavy::before, .px-frame-heavy::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+}
+.px-frame-heavy::before {
+    top: -2px; left: -2px;
+    border-top: 2px solid var(--orange);
+    border-left: 2px solid var(--orange);
+}
+.px-frame-heavy::after {
+    bottom: -2px; right: -2px;
+    border-bottom: 2px solid var(--orange);
+    border-right: 2px solid var(--orange);
+}
+
+/* Dark variant for cream bg */
+.px-frame-dark {
+    background: var(--dark-1);
+    border: 1px solid #333;
+    position: relative;
+}
+.px-frame-dark::before, .px-frame-dark::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+}
+.px-frame-dark::before { top: -1px; right: -1px; }
+.px-frame-dark::after  { bottom: -1px; left: -1px; }
+
+/* ─── Badges ─── */
+.px-badge {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    background: var(--border);
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    display: inline-block;
+}
+.px-badge.orange {
+    background: var(--orange);
+    color: var(--dark-1);
+}
+
+/* ─── Progress Bar ─── */
+.px-bar {
+    flex-grow: 1;
+    height: 8px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+}
+.px-bar-fill {
+    height: 100%;
+    width: var(--w);
+    background: var(--orange);
+    background-image: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 4px,
+        rgba(0,0,0,0.2) 4px,
+        rgba(0,0,0,0.2) 5px
+    );
+    animation: bar-shimmer 2s linear infinite;
+}
+@keyframes bar-shimmer {
+    0%   { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+}
+
+/* ─── Pixel Buttons ─── */
+.px-btn {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 12px 24px;
+    letter-spacing: 2px;
+    border: none;
+    position: relative;
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: inline-block;
+}
+.px-btn--primary {
+    background: var(--orange);
+    color: var(--dark-1);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.2);
+}
+.px-btn--primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.2);
+}
+.px-btn--primary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+}
+.px-btn--ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-bright);
+}
+.px-btn--ghost:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+}
+
+/* ─── Pixel Input ─── */
+.px-input {
+    width: 100%;
+    background: var(--dark-1);
+    border: 1px solid var(--border-bright);
+    border-left: 3px solid var(--orange);
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.px-input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 1px var(--orange-glow);
+}
+.px-input::placeholder { color: var(--text-dim); }
+
+/* ─── Circuit Art ─── */
+.circuit-art {
+    width: 100%;
+    height: 100%;
+    background-color: var(--dark-1);
+}
+.circuit-art svg { display: block; }
+
+/* ─── Cassette Art ─── */
+.cassette-art {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cassette-body {
+    width: 220px;
+    background: #1e1e1e;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 16px;
+    box-shadow: 4px 4px 0 var(--dark-1), inset 0 0 20px rgba(0,0,0,0.5);
+    position: relative;
+}
+.cassette-body::before, .cassette-body::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #444;
+    border-radius: 0;
+}
+.cassette-body::before { left: 10px; }
+.cassette-body::after  { right: 10px; }
+
+.cassette-window {
+    background: #000;
+    border: 2px solid #333;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    margin-bottom: 10px;
+}
+.cassette-reel {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #444;
+    border-radius: 50%;
+    position: relative;
+}
+.cassette-reel::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 2px solid var(--orange);
+    border-radius: 50%;
+    opacity: 0.5;
+}
+.reel-left  { animation: reel-spin 2s linear infinite; }
+.reel-right { animation: reel-spin 2s linear infinite reverse; }
+@keyframes reel-spin {
+    to { transform: rotate(360deg); }
+}
+.cassette-tape {
+    flex: 1;
+    height: 3px;
+    background: var(--text-dim);
+    margin: 0 4px;
+}
+.cassette-label {
+    display: flex;
+    justify-content: space-between;
+    background: var(--orange);
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+}
+.cassette-label span { color: var(--dark-1); }
+
+/* ─── File Tree ─── */
+.file-tree { display: flex; flex-direction: column; gap: 4px; }
+.ft-dir  { color: var(--orange); }
+.ft-file { color: var(--text-muted); }
+
+/* ─── Glitch text ─── */
+.glitch {
+    display: inline-block;
+    position: relative;
+}
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+}
+.glitch::before {
+    color: var(--orange);
+    left: 3px;
+    text-shadow: none;
+    animation: glitch-before 3s infinite linear;
+    clip-path: polygon(0 45%, 100% 45%, 100% 55%, 0 55%);
+    opacity: 0.7;
+}
+.glitch::after {
+    color: var(--orange);
+    left: -3px;
+    animation: glitch-after 4s infinite linear;
+    clip-path: polygon(0 20%, 100% 20%, 100% 28%, 0 28%);
+    opacity: 0.5;
+}
+@keyframes glitch-before {
+    0%, 90%, 100% { transform: translateX(0); opacity: 0; }
+    91%, 93%, 95% { transform: translateX(-4px); opacity: 0.6; }
+    92%, 94%      { transform: translateX(4px); opacity: 0.6; }
+}
+@keyframes glitch-after {
+    0%, 85%, 100% { transform: translateX(0); opacity: 0; }
+    86%, 88%, 90% { transform: translateX(3px); opacity: 0.5; }
+    87%, 89%      { transform: translateX(-3px); opacity: 0.5; }
+}
+
+/* Hard glitch for VHS title */
+.glitch-hard {
+    display: inline-block;
+    position: relative;
+    animation: text-distort 6s ease-in-out infinite;
+}

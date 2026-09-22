@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KENJI.DEV | All Works</title>
+    <meta name="description" content="Complete project archive — interactive experiences, design systems, creative tools, and more by Kenji Mori.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ─ Tokens (mirrors main site) ─ */
+        :root {
+            --dark-1:    #080808;
+            --charcoal:  #141414;
+            --warm-dark: #1a1714;
+            --gray-mid:  #1e1e1e;
+            --cream:     #f0ebe0;
+            --orange:    #e85d04;
+            --orange-soft: rgba(232,93,4,0.18);
+            --orange-glow: rgba(232,93,4,0.45);
+            --text:      #f0f0f0;
+            --text-muted:#666;
+            --text-dim:  #333;
+            --border:    #2a2a2a;
+            --border-bright: #3a3a3a;
+            --font-sans: 'Space Grotesk', system-ui, sans-serif;
+            --font-mono: 'DotGothic16', 'Courier New', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--dark-1);
+            color: var(--text);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+        ::selection { background: var(--orange); color: var(--dark-1); }
+
+        /* ─ Overlays ─ */
+        .scanlines {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9800;
+            background: repeating-linear-gradient(
+                to bottom, transparent, transparent 2px,
+                rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+            );
+        }
+        .vignette {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9799;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.65) 100%);
+        }
+
+        /* ─ BG Grid ─ */
+        .bg-grid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(to right, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.35;
+        }
+
+        /* ─ Nav ─ */
+        nav#top-nav {
+            position: sticky; top: 0; z-index: 500;
+            background: rgba(8,8,8,0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1400px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px clamp(16px,4vw,60px); gap: 20px;
+        }
+        .nav-brand {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--orange);
+            letter-spacing: 2px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-dot { width: 6px; height: 6px; background: var(--orange); animation: blink 1.2s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .nav-back {
+            font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--text-muted); letter-spacing: 1px;
+            border: 1px solid var(--border-bright); padding: 6px 14px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .nav-back:hover { color: var(--orange); border-color: var(--orange); }
+
+        /* ─ Page header ─ */
+        .page-header {
+            position: relative; z-index: 10;
+            padding: clamp(48px,8vh,100px) clamp(16px,5vw,60px) 0;
+            max-width: 1400px; margin: 0 auto;
+        }
+        .page-eyebrow {
+            font-family: var(--font-mono); font-size: 0.75rem;
+            color: var(--text-muted); letter-spacing: 2px; margin-bottom: 12px;
+        }
+        .page-title {
+            font-size: clamp(2.2rem, 6vw, 5rem);
+            font-weight: 700; line-height: 1; margin-bottom: 16px;
+            color: var(--orange);
+            text-shadow: 0 0 30px var(--orange-glow);
+        }
+        .page-desc {
+            font-size: clamp(0.9rem,1.4vw,1.05rem);
+            color: var(--text-muted); max-width: 540px; margin-bottom: 40px;
+        }
+
+        /* ─ Filter row ─ */
+        .filter-row {
+            position: relative; z-index: 10;
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 clamp(16px,5vw,60px) 40px;
+            display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+        }
+        .filter-label {
+            font-family: var(--font-mono); font-size: 0.7rem;
+            color: var(--text-muted); letter-spacing: 1px; margin-right: 4px;
+        }
+        .filter-btn {
+            font-family: var(--font-mono); font-size: 0.7rem;
+            padding: 4px 12px; border: 1px solid var(--border-bright);
+            color: var(--text-muted); background: transparent; cursor: pointer;
+            letter-spacing: 1px; transition: all 0.18s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--orange); color: var(--orange);
+            background: var(--orange-soft);
+        }
+        .filter-btn.active { background: var(--orange); color: var(--dark-1); }
+
+        /* ─ Works grid ─ */
+        .works-grid {
+            position: relative; z-index: 10;
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 clamp(16px,5vw,60px) 80px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* Card */
+        .work-card {
+            background: var(--charcoal);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: card-in 0.5s ease forwards;
+        }
+        @keyframes card-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .work-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--orange);
+            border-color: var(--orange);
+        }
+        /* Pixel corner — top-left */
+        .work-card::before {
+            content: ''; position: absolute; top: -1px; left: -1px;
+            width: 10px; height: 10px; background: var(--orange);
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .work-card:hover::before { opacity: 1; }
+
+        /* Featured card — spans 2 cols */
+        .work-card--featured {
+            grid-column: span 2;
+        }
+        /* Wide card */
+        .work-card--wide {
+            grid-column: 1 / -1;
+            flex-direction: row;
+        }
+        .work-card--wide .card-img { width: 42%; flex-shrink: 0; height: auto; }
+
+        .card-img {
+            height: 200px; flex-shrink: 0;
+            position: relative; overflow: hidden;
+            transition: filter 0.3s ease;
+        }
+        .work-card--featured .card-img { height: 260px; }
+        .work-card:hover .card-img { filter: brightness(1.2) saturate(1.3); }
+
+        /* Colour themes for card images */
+        .ci-orange {
+            background: linear-gradient(135deg, #0a0500, #1a0800);
+            background-image: radial-gradient(circle at 40% 50%, var(--orange-soft), transparent 60%);
+        }
+        .ci-blue {
+            background: linear-gradient(135deg, #04080f, #060b18);
+            background-image: radial-gradient(circle at 60% 40%, rgba(40,120,255,0.15), transparent 60%);
+        }
+        .ci-green {
+            background: linear-gradient(135deg, #030a05, #050f07);
+            background-image: radial-gradient(circle at 30% 60%, rgba(40,200,64,0.12), transparent 60%);
+        }
+        .ci-purple {
+            background: linear-gradient(135deg, #07040f, #0c0718);
+            background-image: radial-gradient(circle at 70% 30%, rgba(140,40,255,0.15), transparent 60%);
+        }
+        .ci-cyan {
+            background: linear-gradient(135deg, #03080a, #050e12);
+            background-image: radial-gradient(circle at 50% 50%, rgba(0,200,220,0.12), transparent 60%);
+        }
+        .ci-red {
+            background: linear-gradient(135deg, #0a0303, #140505);
+            background-image: radial-gradient(circle at 35% 55%, rgba(220,40,40,0.15), transparent 60%);
+        }
+        .ci-mono {
+            background: linear-gradient(135deg, #0a0a0a, #181818);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.015) 20px, rgba(255,255,255,0.015) 21px);
+        }
+        .ci-warm {
+            background: linear-gradient(135deg, #0a0700, #140e00);
+            background-image: radial-gradient(ellipse at 50% 80%, rgba(255,180,0,0.1), transparent 60%);
+        }
+
+        /* Tech grid pattern overlay on all card imgs */
+        .card-img::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Card body */
+        .card-body { padding: 18px 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-meta {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .card-num {
+            font-family: var(--font-mono); font-size: 0.65rem;
+            color: var(--text-muted); letter-spacing: 1px;
+        }
+        .card-year {
+            font-family: var(--font-mono); font-size: 0.65rem;
+            color: var(--text-dim); letter-spacing: 1px;
+        }
+        .card-badge {
+            font-family: var(--font-mono); font-size: 0.6rem;
+            padding: 2px 6px; letter-spacing: 1px;
+            margin-left: auto;
+        }
+        .badge-live    { background: var(--orange); color: var(--dark-1); }
+        .badge-wip     { background: transparent; border: 1px solid #febc2e; color: #febc2e; }
+        .badge-archived{ background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); }
+        .badge-oss     { background: transparent; border: 1px solid #28c840; color: #28c840; }
+
+        .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+        .card-desc  { font-size: 0.85rem; color: var(--text-muted); flex-grow: 1; margin-bottom: 12px; }
+        .card-tags  { display: flex; flex-wrap: wrap; gap: 5px; }
+        .card-tag {
+            font-family: var(--font-mono); font-size: 0.62rem;
+            padding: 2px 7px; border: 1px solid var(--border-bright);
+            color: var(--text-dim); letter-spacing: 0.5px;
+        }
+
+        /* Open label */
+        .card-open {
+            font-family: var(--font-mono); font-size: 0.68rem;
+            color: var(--orange); letter-spacing: 2px;
+            margin-top: 12px; opacity: 0; transform: translateY(4px);
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .work-card:hover .card-open { opacity: 1; transform: translateY(0); }
+
+        /* ─ Category divider ─ */
+        .cat-divider {
+            position: relative; z-index: 10;
+            grid-column: 1 / -1;
+            display: flex; align-items: center; gap: 16px;
+            padding: 8px 0;
+            border-top: 1px solid var(--border);
+            font-family: var(--font-mono); font-size: 0.7rem;
+            color: var(--text-dim); letter-spacing: 2px;
+        }
+        .cat-divider span { flex-shrink: 0; }
+        .cat-divider::after { content: ''; flex-grow: 1; height: 1px; background: var(--border); }
+
+        /* ─ Footer ─ */
+        .works-footer {
+            position: relative; z-index: 10;
+            max-width: 1400px; margin: 0 auto;
+            padding: 24px clamp(16px,5vw,60px);
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+        }
+        .footer-brand { font-family: var(--font-mono); font-size: 1rem; color: var(--orange); }
+        .footer-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+        .footer-back  {
+            font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--text-muted); padding: 8px 20px;
+            border: 1px solid var(--border-bright); transition: all 0.2s;
+        }
+        .footer-back:hover { color: var(--orange); border-color: var(--orange); }
+
+        /* ─ Stagger animation delays ─ */
+        .work-card:nth-child(1)  { animation-delay: 0.05s; }
+        .work-card:nth-child(2)  { animation-delay: 0.10s; }
+        .work-card:nth-child(3)  { animation-delay: 0.15s; }
+        .work-card:nth-child(4)  { animation-delay: 0.20s; }
+        .work-card:nth-child(5)  { animation-delay: 0.25s; }
+        .work-card:nth-child(6)  { animation-delay: 0.30s; }
+        .work-card:nth-child(7)  { animation-delay: 0.35s; }
+        .work-card:nth-child(8)  { animation-delay: 0.40s; }
+        .work-card:nth-child(9)  { animation-delay: 0.45s; }
+        .work-card:nth-child(10) { animation-delay: 0.50s; }
+        .work-card:nth-child(11) { animation-delay: 0.55s; }
+        .work-card:nth-child(12) { animation-delay: 0.60s; }
+        .work-card:nth-child(13) { animation-delay: 0.65s; }
+
+        /* ─ Responsive ─ */
+        @media (max-width: 900px) {
+            .works-grid { grid-template-columns: repeat(2, 1fr); }
+            .work-card--featured { grid-column: 1 / -1; }
+            .work-card--wide { flex-direction: column; }
+            .work-card--wide .card-img { width: 100%; height: 200px; }
+        }
+        @media (max-width: 560px) {
+            .works-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <!-- NAV -->
+    <nav id="top-nav">
+        <div class="nav-inner">
+            <div class="nav-brand">
+                OS 九 <span class="nav-dot"></span>
+            </div>
+            <a href="index.html" class="nav-back">← BACK TO PORTFOLIO</a>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+        <p class="page-eyebrow">// A:/PORTFOLIO/ALL_WORKS — 13 PROJECTS</p>
+        <h1 class="page-title">ALL WORKS</h1>
+        <p class="page-desc">
+            A complete archive of shipped products, experiments, open-source tools, and creative explorations
+            from 2020 to present. Click any card to expand.
+        </p>
+    </header>
+
+    <!-- FILTER ROW -->
+    <div class="filter-row" role="navigation" aria-label="Filter projects">
+        <span class="filter-label">FILTER_BY:</span>
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="interactive">INTERACTIVE</button>
+        <button class="filter-btn" data-filter="design-system">DESIGN SYSTEM</button>
+        <button class="filter-btn" data-filter="tool">TOOL</button>
+        <button class="filter-btn" data-filter="oss">OPEN SOURCE</button>
+        <button class="filter-btn" data-filter="experiment">EXPERIMENT</button>
+    </div>
+
+    <!-- WORKS GRID -->
+    <main class="works-grid" id="works-grid" aria-label="Project archive">
+
+        <!-- FEATURED -->
+        <div class="cat-divider"><span>FEATURED</span></div>
+
+        <!-- 01 -->
+        <article class="work-card work-card--featured" data-cat="interactive" tabindex="0" aria-label="Project: Luminance">
+            <div class="card-img ci-orange"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_01</span>
+                    <span class="card-year">— 2024</span>
+                    <span class="card-badge badge-live">LIVE</span>
+                </div>
+                <h2 class="card-title">Luminance — Generative Audio Art</h2>
+                <p class="card-desc">Real-time WebGL particle system driven by live microphone input. 10,000 particles respond to audio frequency and amplitude, letting users paint with sound. Built with Three.js and custom GLSL shaders.</p>
+                <div class="card-tags">
+                    <span class="card-tag">WebGL</span>
+                    <span class="card-tag">Three.js</span>
+                    <span class="card-tag">GLSL</span>
+                    <span class="card-tag">Web Audio API</span>
+                    <span class="card-tag">React</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 02 -->
+        <article class="work-card" data-cat="interactive" tabindex="0" aria-label="Project: Kōsaten">
+            <div class="card-img ci-purple"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_02</span>
+                    <span class="card-year">— 2022</span>
+                    <span class="card-badge badge-live">AWWWARDS</span>
+                </div>
+                <h2 class="card-title">Kōsaten — Brand Experience</h2>
+                <p class="card-desc">Full-screen WebGL brand activation for a Tokyo streetwear label. Custom shader transitions, scroll-driven camera path, procedural text reveal.</p>
+                <div class="card-tags">
+                    <span class="card-tag">WebGL</span>
+                    <span class="card-tag">GSAP</span>
+                    <span class="card-tag">GLSL</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- DESIGN SYSTEMS -->
+        <div class="cat-divider"><span>DESIGN SYSTEMS</span></div>
+
+        <!-- 03 -->
+        <article class="work-card" data-cat="design-system" tabindex="0" aria-label="Project: Flux Design System">
+            <div class="card-img ci-blue"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_03</span>
+                    <span class="card-year">— 2023</span>
+                    <span class="card-badge badge-oss">OPEN SOURCE</span>
+                </div>
+                <h2 class="card-title">Flux — Design System</h2>
+                <p class="card-desc">A 120-component design system built with React + TypeScript. Includes full Storybook documentation, theme engine, and a11y compliance testing suite.</p>
+                <div class="card-tags">
+                    <span class="card-tag">React</span>
+                    <span class="card-tag">TypeScript</span>
+                    <span class="card-tag">Storybook</span>
+                    <span class="card-tag">Radix UI</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 04 -->
+        <article class="work-card" data-cat="design-system" tabindex="0" aria-label="Project: TokenKit">
+            <div class="card-img ci-warm"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_04</span>
+                    <span class="card-year">— 2023</span>
+                    <span class="card-badge badge-oss">OPEN SOURCE</span>
+                </div>
+                <h2 class="card-title">TokenKit — Design Token CLI</h2>
+                <p class="card-desc">CLI tool that converts Figma Variables to CSS custom properties, Sass maps, and JSON. Supports theming, scoping, and multi-brand token sets.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Node.js</span>
+                    <span class="card-tag">Figma API</span>
+                    <span class="card-tag">CSS</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 05 wide -->
+        <article class="work-card work-card--wide" data-cat="design-system interactive" tabindex="0" aria-label="Project: OS九 Portfolio">
+            <div class="card-img ci-mono"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_05</span>
+                    <span class="card-year">— 2026</span>
+                    <span class="card-badge badge-live">LIVE</span>
+                </div>
+                <h2 class="card-title">OS 九 — Retro Futurist Portfolio</h2>
+                <p class="card-desc">This very website. A retro-futuristic developer portfolio built with pure HTML, CSS, and Vanilla JS. Asymmetric editorial layout, animated pixel grid, single VHS/CRT showcase section, command panel with an embedded Snake game, and zero frameworks.</p>
+                <div class="card-tags">
+                    <span class="card-tag">HTML</span>
+                    <span class="card-tag">CSS</span>
+                    <span class="card-tag">Vanilla JS</span>
+                    <span class="card-tag">Canvas API</span>
+                    <span class="card-tag">SVG</span>
+                </div>
+                <p class="card-open">YOU ARE HERE →</p>
+            </div>
+        </article>
+
+        <!-- TOOLS -->
+        <div class="cat-divider"><span>TOOLS &amp; UTILITIES</span></div>
+
+        <!-- 06 -->
+        <article class="work-card" data-cat="tool" tabindex="0" aria-label="Project: Neon Scroll">
+            <div class="card-img ci-cyan"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_06</span>
+                    <span class="card-year">— 2023</span>
+                    <span class="card-badge badge-oss">OPEN SOURCE</span>
+                </div>
+                <h2 class="card-title">Neon Scroll — GSAP Toolkit</h2>
+                <p class="card-desc">Collection of 30+ production-ready GSAP ScrollTrigger presets. Parallax, stagger, clip-path reveals, and path morphing — copy-paste ready.</p>
+                <div class="card-tags">
+                    <span class="card-tag">GSAP</span>
+                    <span class="card-tag">ScrollTrigger</span>
+                    <span class="card-tag">JavaScript</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 07 -->
+        <article class="work-card" data-cat="tool oss" tabindex="0" aria-label="Project: Palette Engine">
+            <div class="card-img ci-purple"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_07</span>
+                    <span class="card-year">— 2022</span>
+                    <span class="card-badge badge-oss">OPEN SOURCE</span>
+                </div>
+                <h2 class="card-title">Palette Engine</h2>
+                <p class="card-desc">Perceptually uniform color scale generator. Input a brand hex, output a full 11-step scale with WCAG-compliant contrast ratios and CSS custom properties.</p>
+                <div class="card-tags">
+                    <span class="card-tag">TypeScript</span>
+                    <span class="card-tag">OKLCH</span>
+                    <span class="card-tag">CSS</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 08 -->
+        <article class="work-card" data-cat="tool" tabindex="0" aria-label="Project: MotionDB">
+            <div class="card-img ci-green"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">PROJECT_08</span>
+                    <span class="card-year">— 2022</span>
+                    <span class="card-badge badge-live">LIVE</span>
+                </div>
+                <h2 class="card-title">MotionDB — Animation Reference</h2>
+                <p class="card-desc">Searchable library of 200+ animation patterns, easing curves, and timing functions with live interactive previews and CSS/JS export.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Next.js</span>
+                    <span class="card-tag">Framer Motion</span>
+                    <span class="card-tag">CSS</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- EXPERIMENTS -->
+        <div class="cat-divider"><span>EXPERIMENTS</span></div>
+
+        <!-- 09 -->
+        <article class="work-card" data-cat="experiment" tabindex="0" aria-label="Experiment: Fluid Sim">
+            <div class="card-img ci-blue"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">EXP_01</span>
+                    <span class="card-year">— 2024</span>
+                    <span class="card-badge badge-wip">WIP</span>
+                </div>
+                <h2 class="card-title">Fluid Simulation — WebGPU</h2>
+                <p class="card-desc">Real-time Navier-Stokes fluid solver running on the GPU via WebGPU compute shaders. Interactive mouse disturbance with viscosity and density sliders.</p>
+                <div class="card-tags">
+                    <span class="card-tag">WebGPU</span>
+                    <span class="card-tag">WGSL</span>
+                    <span class="card-tag">Compute</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 10 -->
+        <article class="work-card" data-cat="experiment" tabindex="0" aria-label="Experiment: Pixel Physics">
+            <div class="card-img ci-orange"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">EXP_02</span>
+                    <span class="card-year">— 2023</span>
+                    <span class="card-badge badge-archived">ARCHIVED</span>
+                </div>
+                <h2 class="card-title">Pixel Physics</h2>
+                <p class="card-desc">Falling sand game in the browser. 512×512 canvas simulation with sand, water, fire, steam, and 12 other materials. Written in vanilla JS with typed arrays.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Canvas API</span>
+                    <span class="card-tag">JavaScript</span>
+                    <span class="card-tag">Typed Arrays</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 11 -->
+        <article class="work-card" data-cat="experiment interactive" tabindex="0" aria-label="Experiment: Voronoi UI">
+            <div class="card-img ci-red"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">EXP_03</span>
+                    <span class="card-year">— 2023</span>
+                    <span class="card-badge badge-live">LIVE</span>
+                </div>
+                <h2 class="card-title">Voronoi UI Components</h2>
+                <p class="card-desc">Generative UI where component borders are defined by Voronoi cell edges. Layouts fracture and reform on hover using a D3-based cell engine.</p>
+                <div class="card-tags">
+                    <span class="card-tag">D3.js</span>
+                    <span class="card-tag">SVG</span>
+                    <span class="card-tag">React</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 12 -->
+        <article class="work-card" data-cat="experiment" tabindex="0" aria-label="Experiment: ASCII Camera">
+            <div class="card-img ci-mono"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">EXP_04</span>
+                    <span class="card-year">— 2021</span>
+                    <span class="card-badge badge-archived">ARCHIVED</span>
+                </div>
+                <h2 class="card-title">ASCII Live Camera</h2>
+                <p class="card-desc">Converts your webcam feed to ASCII art in real-time using Canvas + WebRTC. Density mapping via luminance. 10 different character sets and a CRT filter mode.</p>
+                <div class="card-tags">
+                    <span class="card-tag">WebRTC</span>
+                    <span class="card-tag">Canvas API</span>
+                    <span class="card-tag">JavaScript</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+        <!-- 13 -->
+        <article class="work-card" data-cat="experiment oss" tabindex="0" aria-label="Experiment: Shader Playground">
+            <div class="card-img ci-cyan"></div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="card-num">EXP_05</span>
+                    <span class="card-year">— 2021</span>
+                    <span class="card-badge badge-oss">OPEN SOURCE</span>
+                </div>
+                <h2 class="card-title">Shader Playground</h2>
+                <p class="card-desc">In-browser GLSL shader editor with live preview, hot-reload, built-in uniforms (time, mouse, resolution), and a library of 50+ starter shaders.</p>
+                <div class="card-tags">
+                    <span class="card-tag">WebGL</span>
+                    <span class="card-tag">GLSL</span>
+                    <span class="card-tag">CodeMirror</span>
+                </div>
+                <p class="card-open">OPEN PROJECT →</p>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="works-footer">
+        <span class="footer-brand">OS 九</span>
+        <span class="footer-count">13 PROJECTS / KENJI MORI / 2020–2026</span>
+        <a href="index.html" class="footer-back">← BACK TO PORTFOLIO</a>
+    </footer>
+
+    <script>
+    /* ── Filter logic ── */
+    (function () {
+        const btns  = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.work-card');
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const f = btn.dataset.filter;
+                cards.forEach(card => {
+                    const cats = card.dataset.cat || '';
+                    const show = f === 'all' || cats.includes(f);
+                    card.style.opacity    = show ? '' : '0.15';
+                    card.style.transform  = show ? '' : 'scale(0.97)';
+                    card.style.pointerEvents = show ? '' : 'none';
+                    card.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                });
+            });
+        });
+
+        /* Keyboard: Enter/Space on cards */
+        cards.forEach(card => {
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

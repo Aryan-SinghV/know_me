@@ -1,0 +1,236 @@
+/* ==========================================================
+   COMMAND PANEL — css/command-panel.css
+   ADDITIVE ONLY — all selectors prefixed with .cp-
+   Uses existing CSS custom properties from style.css.
+   Does NOT override or redefine anything in the existing files.
+   ========================================================== */
+
+/* ─── Terminal shell wrapper ─── */
+.cp-terminal {
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+    overflow: hidden;
+    /* px-frame-heavy already handles border & corners */
+}
+
+/* ─── Title bar ─── */
+.cp-term-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--charcoal);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.cp-dots {
+    display: flex;
+    gap: 6px;
+}
+.cp-title {
+    flex-grow: 1;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+/* ─── Terminal body (output + input) ─── */
+.cp-term-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background: var(--dark-1);
+    padding: 0;
+    overflow: hidden;
+}
+
+/* ─── Scrollable output area ─── */
+.cp-output {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 16px 18px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    min-height: 300px;
+    max-height: 360px;
+    /* Custom scrollbar to match theme */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-bright) var(--dark-1);
+}
+.cp-output::-webkit-scrollbar { width: 4px; }
+.cp-output::-webkit-scrollbar-track { background: var(--dark-1); }
+.cp-output::-webkit-scrollbar-thumb { background: var(--border-bright); }
+
+/* Output line types */
+.cp-line {
+    display: block;
+    margin-bottom: 2px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.cp-line--cmd    { color: var(--orange); }
+.cp-line--out    { color: var(--text-muted); }
+.cp-line--ok     { color: #28c840; }
+.cp-line--err    { color: #ff5f57; }
+.cp-line--info   { color: var(--text); }
+.cp-line--blank  { min-height: 0.8em; }
+.cp-line--accent { color: var(--orange); font-weight: 600; }
+.cp-line--dim    { color: var(--text-dim); font-size: 0.75rem; }
+
+/* ─── Command input row ─── */
+.cp-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-top: 1px solid var(--border);
+    background: var(--dark-1);
+    flex-shrink: 0;
+}
+.cp-prompt {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+/* Override px-input for terminal context — scoped fully */
+.cp-input.cp-input {      /* double-class for specificity without !important */
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    border-left: none;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    outline: none;
+    padding: 0;
+    caret-color: var(--orange);
+    box-shadow: none;
+}
+.cp-input.cp-input::placeholder { color: var(--text-dim); font-size: 0.78rem; }
+.cp-input.cp-input:focus { border-color: transparent; box-shadow: none; }
+
+/* Blinking block cursor (decorative, behind input) */
+.cp-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--orange);
+    animation: cp-blink 1s step-end infinite;
+    flex-shrink: 0;
+    align-self: center;
+    opacity: 0.8;
+}
+@keyframes cp-blink { 50% { opacity: 0; } }
+
+/* ─── Snake game container ─── */
+.cp-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    background: var(--dark-1);
+    flex-grow: 1;
+}
+.cp-game-container[hidden] { display: none; }
+
+.cp-game-hud {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 360px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border-bright);
+}
+.cp-close-game {
+    margin-left: auto;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+}
+
+#cp-snake-canvas {
+    display: block;
+    border: 2px solid var(--border-bright);
+    background: #050505;
+    image-rendering: pixelated;
+}
+
+.cp-game-note {
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+/* ─── Docs / Help panel ─── */
+.cp-docs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    /* px-frame handles border & corner decorations */
+}
+
+.cp-cmd-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px 16px;
+    flex-grow: 1;
+}
+.cp-cmd-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+}
+.cp-cmd-list li:last-child { border-bottom: none; }
+
+.cp-cmd-name {
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+}
+.cp-cmd-desc {
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+.cp-cmd-arcade {
+    background: rgba(232, 93, 4, 0.06);
+    padding: 8px 6px !important;
+    margin: 4px -6px;
+    border-left: 2px solid var(--orange) !important;
+    border-bottom: none !important;
+    gap: 4px !important;
+}
+.cp-cmd-arcade .cp-cmd-name { color: var(--orange); }
+
+.cp-docs-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+    /* split-70-30 already collapses to 1-col at 1024px via style.css */
+    .cp-terminal { min-height: 420px; }
+    .cp-output   { max-height: 260px; }
+    .cp-game-hud, #cp-snake-canvas { width: 100%; max-width: 360px; }
+}
+@media (max-width: 600px) {
+    .cp-output { max-height: 200px; font-size: 0.75rem; }
+}
+
+/* Restore text cursor inside the terminal input only.
+   style.css sets * { cursor: none } for the custom cursor,
+   but the command input must show the system text cursor so
+   users know where they are typing. Scoped — no side effects. */
+#cp-input,
+#cp-input:hover,
+#cp-input:focus {
+    cursor: text !important;
+    caret-color: var(--orange);
+}
