@@ -30,8 +30,9 @@
     /* ── Boot message ── */
     const BOOT = [
         { cls: 'cp-line--dim',   text: '┌──────────────────────────────────────────┐' },
-        { cls: 'cp-line--dim',   text: '│  KENJI.DEV  //  COMMAND_PANEL  v1.1      │' },
-        { cls: 'cp-line--dim',   text: '│  Type  help  to list available commands.  │' },
+        { cls: 'cp-line--dim',   text: '│  ARYAN SINGHVISHESH  //  ASV_TERMINAL  v1.0  │' },
+        { cls: 'cp-line--dim',   text: '│  Engineer · Designer · Logician · India       │' },
+        { cls: 'cp-line--dim',   text: '│  Type  help  to list available commands.     │' },
         { cls: 'cp-line--dim',   text: '└──────────────────────────────────────────┘' },
         { cls: 'cp-line--blank', text: '' },
     ];
@@ -142,7 +143,7 @@
     }
 
     function renderEcho(cmd) {
-        renderLines([{ cls: 'cp-line--cmd', text: `kenji.dev:~$ ${cmd}` }]);
+        renderLines([{ cls: 'cp-line--cmd', text: `asv:~$ ${cmd}` }]);
     }
 
     function renderBlank() {
@@ -180,17 +181,22 @@
 
     function cmdAbout() {
         renderLines([
-            { cls: 'cp-line--accent', text: '> ABOUT KENJI.DEV ───────────────────────────' },
+            { cls: 'cp-line--accent', text: '> ABOUT ARYAN SINGHVISHESH ─────────────────' },
             { cls: 'cp-line--blank',  text: '' },
-            { cls: 'cp-line--info',   text: '  Creative developer & UI engineer based in Tokyo.' },
-            { cls: 'cp-line--out',    text: '  Specializing in interactive web experiences,' },
-            { cls: 'cp-line--out',    text: '  retro-inspired interfaces, and creative coding.' },
+            { cls: 'cp-line--info',   text: '  Handle: ASV | Location: India' },
+            { cls: 'cp-line--out',    text: '  Versatile technologist with a strong foundation' },
+            { cls: 'cp-line--out',    text: '  in C++ algorithmic problem-solving and Python-' },
+            { cls: 'cp-line--out',    text: '  driven data analysis.' },
             { cls: 'cp-line--blank',  text: '' },
-            { cls: 'cp-line--out',    text: '  I build products at the intersection of design' },
-            { cls: 'cp-line--out',    text: '  systems and engineering — obsessed with craft,' },
-            { cls: 'cp-line--out',    text: '  detail, and pixel-perfect execution.' },
+            { cls: 'cp-line--out',    text: '  Combines Linux admin, networking, and foundational' },
+            { cls: 'cp-line--out',    text: '  cybersecurity with a creative eye for visual design.' },
             { cls: 'cp-line--blank',  text: '' },
-            { cls: 'cp-line--ok',     text: '  [STATUS: OPEN TO WORK / FREELANCE: AVAILABLE]' },
+            { cls: 'cp-line--out',    text: '  Domains: Algorithms & DSA  |  Data Science' },
+            { cls: 'cp-line--out',    text: '           Systems & Security |  Visual Design' },
+            { cls: 'cp-line--blank',  text: '' },
+            { cls: 'cp-line--ok',     text: '  [STATUS: OPEN FOR OPPORTUNITIES]' },
+            { cls: 'cp-line--out',    text: '  EMAIL:  singhvishesharyan@gmail.com' },
+            { cls: 'cp-line--out',    text: '  GITHUB: github.com/Aryan-SinghV' },
             { cls: 'cp-line--blank',  text: '' },
         ]);
     }
@@ -211,39 +217,55 @@
         renderLines([
             { cls: 'cp-line--accent', text: '> SKILL_MATRIX ──────────────────────────────' },
             { cls: 'cp-line--blank',  text: '' },
-            { cls: 'cp-line--out',    text: '  JavaScript    [██████████]  Expert' },
-            { cls: 'cp-line--out',    text: '  TypeScript    [█████████░]  Advanced' },
-            { cls: 'cp-line--out',    text: '  React / Next  [██████████]  Expert' },
-            { cls: 'cp-line--out',    text: '  CSS / GSAP    [██████████]  Expert' },
-            { cls: 'cp-line--out',    text: '  Three.js      [████████░░]  Advanced' },
-            { cls: 'cp-line--out',    text: '  Node.js       [████████░░]  Advanced' },
-            { cls: 'cp-line--out',    text: '  UI/UX Design  [█████████░]  Advanced' },
-            { cls: 'cp-line--out',    text: '  WebGL         [██████░░░░]  Proficient' },
+            { cls: 'cp-line--info',   text: '  ── PROGRAMMING ──' },
+            { cls: 'cp-line--out',    text: '  C++           [██████████]  Primary Language' },
+            { cls: 'cp-line--out',    text: '  Python        [█████████░]  Data & Scripting' },
+            { cls: 'cp-line--out',    text: '  JavaScript    [███████░░░]  Web / Logic' },
+            { cls: 'cp-line--out',    text: '  HTML / CSS    [████████░░]  Frontend' },
+            { cls: 'cp-line--out',    text: '  PHP           [█████░░░░░]  Backend / Web' },
+            { cls: 'cp-line--blank',  text: '' },
+            { cls: 'cp-line--info',   text: '  ── DATA SCIENCE ──' },
+            { cls: 'cp-line--out',    text: '  Pandas/NumPy  [█████████░]  EDA, Analysis' },
+            { cls: 'cp-line--out',    text: '  Seaborn       [███████░░░]  Visualisation' },
+            { cls: 'cp-line--out',    text: '  Jupyter       [████████░░]  Notebooks' },
+            { cls: 'cp-line--blank',  text: '' },
+            { cls: 'cp-line--info',   text: '  ── DSA ──' },
+            { cls: 'cp-line--out',    text: '  Graph algs, Combinatorics, Sliding Window' },
+            { cls: 'cp-line--out',    text: '  2D Prefix Sums, Binary Search on Answer' },
+            { cls: 'cp-line--blank',  text: '' },
+            { cls: 'cp-line--info',   text: '  ── SYSTEMS & DESIGN ──' },
+            { cls: 'cp-line--out',    text: '  Arch Linux (Hyprland) | macOS | Nmap' },
+            { cls: 'cp-line--out',    text: '  Figma  [████████░░]  UI / Prototyping' },
+            { cls: 'cp-line--out',    text: '  PS/AI  [███████░░░]  Vector Assets' },
+            { cls: 'cp-line--out',    text: '  AE     [██████░░░░]  Motion Graphics' },
             { cls: 'cp-line--blank',  text: '' },
         ]);
     }
 
     function cmdExperience() {
         renderLines([
-            { cls: 'cp-line--accent', text: '> CAREER_LOG ────────────────────────────────' },
+            { cls: 'cp-line--accent', text: '> LEARNING_LOG ──────────────────────────────' },
             { cls: 'cp-line--blank',  text: '' },
-            { cls: 'cp-line--out',    text: '  2020.03  First commit. Built a portfolio with vanilla HTML/CSS.' },
-            { cls: 'cp-line--out',    text: '  2021.06  Joined a startup as Junior Frontend Dev.' },
-            { cls: 'cp-line--out',    text: '           Stack: React, Sass, REST APIs.' },
-            { cls: 'cp-line--out',    text: '  2022.09  Mid-level role. Led UI component library rebuild.' },
-            { cls: 'cp-line--out',    text: '           Introduced TypeScript & Storybook.' },
-            { cls: 'cp-line--out',    text: '  2023.11  Creative Developer at digital agency.' },
-            { cls: 'cp-line--out',    text: '           Awards: Awwwards SOTD × 3, FWA nominee.' },
-            { cls: 'cp-line--out',    text: '  2024.06  Freelance — interactive campaigns & portfolios.' },
-            { cls: 'cp-line--out',    text: '  2026.06  KENJI.DEV v2 launched. You\'re looking at it.' },
+            { cls: 'cp-line--out',    text: '  2022  C++ & competitive programming begins.' },
+            { cls: 'cp-line--out',    text: '        Graph algorithms, combinatorics, DSA patterns.' },
+            { cls: 'cp-line--out',    text: '  2023  Python & data science pipeline.' },
+            { cls: 'cp-line--out',    text: '        Pandas, NumPy, Seaborn, Jupyter, EDA workflows.' },
+            { cls: 'cp-line--out',    text: '  2024  Systems & networking deep-dive.' },
+            { cls: 'cp-line--out',    text: '        Arch Linux (Hyprland), TCP/ARQ, Nmap recon.' },
+            { cls: 'cp-line--out',    text: '        Flex/Lex — built a lexical analyzer.' },
+            { cls: 'cp-line--out',    text: '  2025  Visual design & multimedia production.' },
+            { cls: 'cp-line--out',    text: '        Figma, Photoshop, Illustrator, After Effects.' },
+            { cls: 'cp-line--out',    text: '  2026  Portfolio launched. Signal: ONLINE.' },
             { cls: 'cp-line--blank',  text: '' },
         ]);
     }
 
     function cmdContact() {
         renderLines([
-            { cls: 'cp-line--ok',    text: '> ESTABLISHING UPLINK CONNECTION ...' },
-            { cls: 'cp-line--dim',   text: '  Routing to contact console...' },
+            { cls: 'cp-line--ok',    text: '> OPENING CONTACT UPLINK ...' },
+            { cls: 'cp-line--out',   text: '  EMAIL:  singhvishesharyan@gmail.com' },
+            { cls: 'cp-line--out',   text: '  GITHUB: github.com/Aryan-SinghV' },
+            { cls: 'cp-line--dim',   text: '  Scrolling to contact form...' },
             { cls: 'cp-line--blank', text: '' },
         ]);
         setTimeout(() => {
