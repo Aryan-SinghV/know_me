@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   OS 九 — BASE DESIGN SYSTEM
+   ASV — BASE DESIGN SYSTEM
    ═══════════════════════════════════════════════ */
 
 /* ─── Tokens ─── */
@@ -802,6 +802,37 @@ input, textarea { font-family: var(--font-sans); }
 .input-row { display: flex; flex-direction: column; gap: 6px; }
 .input-row label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
 .term-feedback { min-height: 20px; margin-top: 4px; }
+
+/* Uplink Telemetry Streams */
+.uplink-stream-field {
+    cursor: default !important;
+    user-select: none;
+    -webkit-user-select: none;
+    caret-color: transparent !important;
+    background: #050505 !important;
+    color: var(--orange) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-left: 3px solid var(--orange) !important;
+    outline: none !important;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+.uplink-stream-field:focus {
+    border-color: var(--orange) !important;
+    box-shadow: 0 0 6px var(--orange-glow), inset 0 0 10px rgba(0, 0, 0, 0.8) !important;
+}
+#contact-msg.uplink-stream-field {
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: #38ef7d !important;
+    border-left: 3px solid #28c840 !important;
+    min-height: 110px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-y: hidden;
+    text-shadow: 0 0 4px rgba(40, 200, 64, 0.35);
+}
 
 .status-sidebar {
     display: flex;

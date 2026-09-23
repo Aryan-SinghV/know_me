@@ -1,5 +1,5 @@
 /* ==============================================
-   OS 九 — main.js
+   ASV — main.js
    Vanilla JS: boot, cursor, canvas bg, clock,
    VHS counter, scroll reveals, interactions.
    ============================================== */
@@ -15,12 +15,12 @@
     const bootLinesEl  = document.getElementById('boot-lines');
 
     const bootMessages = [
-        '> BIOS_九 v9.1 ...',
+        '> BIOS_ASV v1.0 ...',
         '> CHECKING MEMORY .... [16MB OK]',
         '> LOADING KERNEL .... [OK]',
         '> MOUNTING FILESYSTEM ... [OK]',
         '> INITIALIZING DISPLAY .... [CRT 640x480]',
-        '> WELCOME TO OS 九.',
+        '> WELCOME TO ASV.',
     ];
 
     let bootProgress  = 0;
@@ -236,25 +236,135 @@
     }
 
     /* ─────────────────────────────────────────
-       CONTACT / TRANSMIT
+       UPLINK CONSOLE TELEMETRY STREAM GENERATOR
     ───────────────────────────────────────── */
-    const transmitBtn = document.getElementById('transmit-btn');
-    const termFeedback = document.getElementById('term-feedback');
+    const contactNameEl = document.getElementById('contact-name');
+    const contactMsgEl  = document.getElementById('contact-msg');
+    const transmitBtn   = document.getElementById('transmit-btn');
+    const termFeedback  = document.getElementById('term-feedback');
+
+    if (termFeedback) {
+        termFeedback.textContent = '> TELEMETRY STREAM: RUNNING [ONLINE].';
+        termFeedback.style.color = 'var(--text-muted)';
+    }
+
+    // Disable all manual user editing/filling
+    [contactNameEl, contactMsgEl].forEach(el => {
+        if (!el) return;
+        el.setAttribute('readonly', 'true');
+        el.addEventListener('keydown', e => e.preventDefault());
+        el.addEventListener('paste', e => e.preventDefault());
+        el.addEventListener('cut', e => e.preventDefault());
+        el.addEventListener('drop', e => e.preventDefault());
+    });
+
+    // 1. YOUR NAME: Randomly generating identity stream motion
+    const nameIdentPool = [
+        'CLIENT_NODE::[0x9F41] // SYNC_BURST',
+        'IP:192.168.9.42 // MTU:1500 // ACK',
+        'STREAM_ORIGIN: HYPRLAND::ARCH_PROBE',
+        'HASH_ROT32::7A4B-09CE-F102',
+        'PORT_LISTEN:[TCP/8080] >> ESTABLISHED',
+        'BUFFER_INSPECT::SIG_CARRIER_LOCK',
+        'COMBINATORIC_GRAPH_WALK::0xBE41',
+        'ICMP_ECHO_REQ [SEQ_ID:8849]',
+        'LEXICAL_STREAM_SCAN::TOKEN_SYNC',
+        'TELEMETRY_TX: ASV_NODE_09 [OK]',
+        'EDA_SIGNAL: DENSITY_ESTIMATE_PASS',
+        'UTILITY_VECTOR_MODEL: 0.9841_EVAL'
+    ];
+    const GLYPHS = '0123456789ABCDEF!_#/*-<>~';
+
+    let currentNameTarget = nameIdentPool[0];
+    let nameScrambleProgress = 0;
+    let nameTargetIndex = 0;
+
+    function stepNameMotion() {
+        if (!contactNameEl) return;
+        if (nameScrambleProgress < currentNameTarget.length) {
+            nameScrambleProgress++;
+            let rendered = '';
+            for (let i = 0; i < currentNameTarget.length; i++) {
+                if (i < nameScrambleProgress) {
+                    rendered += currentNameTarget[i];
+                } else {
+                    rendered += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                }
+            }
+            contactNameEl.value = rendered;
+        } else {
+            const cursor = (Math.floor(Date.now() / 400) % 2 === 0) ? ' █' : ' _';
+            contactNameEl.value = currentNameTarget + cursor;
+        }
+    }
+
+    setInterval(stepNameMotion, 40);
+
+    setInterval(() => {
+        nameTargetIndex = (nameTargetIndex + 1) % nameIdentPool.length;
+        currentNameTarget = nameIdentPool[nameTargetIndex];
+        nameScrambleProgress = 0;
+    }, 2800);
+
+    // 2. MESSAGE PAYLOAD: Continuous rolling packet stream motion
+    const payloadGenerators = [
+        () => `> [TX_PKT: 0x${Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0')}] ADDR: 0x7FFE${Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase()} LEN: ${32 + Math.floor(Math.random() * 224)}B`,
+        () => `> TCP_DUPLICATE_CHECK: 0 DROPS // RTT: ${(10 + Math.random() * 8).toFixed(1)}ms`,
+        () => `> BUFFER_DUMP: ${Array.from({ length: 6 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join(' ')} ... [VALID]`,
+        () => `> EDA_LOG: np.log1p(sample_distribution) -> STD_ERR: 0.00${Math.floor(Math.random() * 90 + 10)}`,
+        () => `> LEX_ANALYZER: PARSED TOK_IDENT[0x${Math.floor(Math.random() * 255).toString(16).toUpperCase()}] => SYMBOL_TABLE_OK`,
+        () => `> UTILITY_MODEL: MAXIMIZING REWARD_VECTOR [U=${(0.92 + Math.random() * 0.07).toFixed(4)}]`,
+        () => `> SLIDING_WINDOW_ARQ: FRAME #${1000 + Math.floor(Math.random() * 9000)} ACK_RECEIVED`,
+        () => `> MONOTONIC_DEQUE: WINDOW_QUERY_VAL=${Math.floor(Math.random() * 512)} O(1)_OK`,
+        () => `> NMAP_RECON: PORT ${[22, 80, 443, 8080][Math.floor(Math.random() * 4)]}/TCP OPEN [STATUS: 200]`,
+        () => `> HYPRLAND_IPC: DISPATCH WORKSPACE_EVENT -> ID_${Math.floor(Math.random() * 9 + 1)}`,
+        () => `> GRAPH_ALGO: BFS_TRAVERSAL QUEUE_LEN=${Math.floor(Math.random() * 32 + 8)} VISITED=TRUE`,
+        () => `> SYSTEM_TELEMETRY: ARCH_LINUX KERNEL 6.9 // LOAD: ${(0.1 + Math.random() * 0.4).toFixed(2)}`
+    ];
+
+    let messageQueue = '';
+    if (contactMsgEl) {
+        contactMsgEl.value = '> INITIALIZING LIVE TELEMETRY STREAM...\n> CARRIER LOCK ACQUIRED [CHANNEL_9]';
+    }
+
+    function enqueuePayloadLine() {
+        if (!contactMsgEl) return;
+        const generator = payloadGenerators[Math.floor(Math.random() * payloadGenerators.length)];
+        messageQueue += '\n' + generator();
+    }
+
+    // Stream characters into textarea for continuous visual motion
+    setInterval(() => {
+        if (!contactMsgEl) return;
+        if (messageQueue.length > 0) {
+            const chunk = messageQueue.slice(0, 3);
+            messageQueue = messageQueue.slice(3);
+            contactMsgEl.value += chunk;
+
+            const lines = contactMsgEl.value.split('\n');
+            if (lines.length > 12) {
+                contactMsgEl.value = lines.slice(lines.length - 10).join('\n');
+            }
+            contactMsgEl.scrollTop = contactMsgEl.scrollHeight;
+        }
+    }, 24);
+
+    setInterval(enqueuePayloadLine, 1100);
+
+    // Interactive burst injection on Send Message
     if (transmitBtn && termFeedback) {
         transmitBtn.addEventListener('click', () => {
-            const name = document.getElementById('contact-name')?.value.trim();
-            const msg  = document.getElementById('contact-msg')?.value.trim();
-            if (!name || !msg) {
-                termFeedback.textContent = '> ERROR: EMPTY PAYLOAD DETECTED.';
-                termFeedback.style.color = '#ff5f57';
-                return;
-            }
-            termFeedback.textContent = '> TRANSMITTING...';
-            termFeedback.style.color = 'var(--orange)';
+            messageQueue = '';
+            const burst = '\n>>> [OPERATOR_BURST] PACKET OVERRIDE DISPATCHED' +
+                          '\n>>> ROUTE: singhvishesharyan@gmail.com' +
+                          '\n>>> ACK_STATUS: 200_OK // LINK_ESTABLISHED';
+            messageQueue = burst;
+            termFeedback.textContent = '> PACKET BURST DELIVERED. ACK_200_OK.';
+            termFeedback.style.color = '#28c840';
             setTimeout(() => {
-                termFeedback.textContent = '> PACKET DELIVERED. ACK_九_OK.';
-                termFeedback.style.color = '#28c840';
-            }, 1200);
+                termFeedback.textContent = '> TELEMETRY STREAM: RUNNING [ONLINE].';
+                termFeedback.style.color = 'var(--text-muted)';
+            }, 2500);
         });
     }
 
